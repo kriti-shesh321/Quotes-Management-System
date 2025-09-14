@@ -5,11 +5,11 @@ import { api } from '../lib/api';
 import QuoteCard from './QuoteCard';
 import { debounce } from '../lib/debounce';
 
-export default function QuotesList(){
+export default function QuotesList() {
   const dispatch = useAppDispatch();
   const { items, offset, finished } = useAppSelector(s => s.quotes);
 
-  const [topics, setTopics] = useState<{id:number;name:string}[]>([]);
+  const [topics, setTopics] = useState<{ id: number; name: string; }[]>([]);
   const [topicId, setTopicId] = useState<number | ''>('');
   const [query, setQuery] = useState('');
   const [loadingTopics, setLoadingTopics] = useState(false);
@@ -42,7 +42,7 @@ export default function QuotesList(){
     debouncedRun(query, topicId);
   }, [query, topicId]);
 
-  async function loadMore(){
+  async function loadMore() {
     // use current filters
     const params: any = { limit: 10, offset };
     if (query) params.q = query;
@@ -64,6 +64,7 @@ export default function QuotesList(){
           value={topicId}
           onChange={e => setTopicId(e.target.value === '' ? '' : Number(e.target.value))}
           className="p-2 border rounded"
+          disabled={loadingTopics}
         >
           <option value="">All topics</option>
           {topics.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
