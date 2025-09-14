@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from 'react';
+import Auth from './components/Auth';
+import AddQuote from './components/AddQuote';
+import QuotesList from './components/QuotesList';
+import { useAppDispatch, useAppSelector } from './hooks';
+import { fetchMe, logout } from './store/slices/authSlice';
 
-function App() {
-  const [count, setCount] = useState(0)
+
+export default function App() {
+  const dispatch = useAppDispatch();
+  const auth = useAppSelector(s => s.auth);
+
+  useEffect(() => {
+    if (auth.token && !auth.user) dispatch(fetchMe());
+  }, [auth.token]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="max-w-3xl mx-auto p-4">
+      {!auth.user ? <Auth /> : (
+        <>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-bold">Quotes App</h1>
+            <div>
+              <div>{auth.user.username} ({auth.user.role})</div>
+              <button
+                className="px-2 py-1 border rounded text-sm"
+                onClick={() => dispatch(logout())}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
 
-export default App
+          <AddQuote />
+          <QuotesList />
+
+        </>
+      )}
+    </div>
+  );
+}

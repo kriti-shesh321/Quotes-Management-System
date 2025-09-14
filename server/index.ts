@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes';
 import quotesRoutes from './routes/quoteRoutes';
 import userRoutes from './routes/userRoutes';
+import topicRoutes from './routes/topicRoutes';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: "./.env" });
@@ -19,9 +20,10 @@ app.use(bodyParser.json());
 app.get('/health', (_req, res) => res.json({ ok: true }));
 
 // routes
-app.use('/auth', authRoutes);
-app.use('/quotes', quotesRoutes);
-app.use('/user', userRoutes);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/quotes', quotesRoutes);
+app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/topics', topicRoutes);
 
 
 app.listen(PORT, () => {

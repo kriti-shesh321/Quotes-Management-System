@@ -12,7 +12,7 @@ function toUserResponseObject(u: any): UserData {
     return rest as UserData;
 }
 
-//POST auth/register
+//POST api/v1/auth/register
 export async function register(req: Request, res: Response) {
     try {
         const body = req.body as RegisterRequest;
@@ -47,7 +47,7 @@ export async function register(req: Request, res: Response) {
     }
 }
 
-//POST auth/login
+//POST api/v1/auth/login
 export async function login(req: Request, res: Response) {
     try {
         const body = req.body as LoginRequest;

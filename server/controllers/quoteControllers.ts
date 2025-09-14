@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { pool } from '../utils/db';
 import { AuthRequest } from "../types/types";
 
-//GET /quotes?q=&topic_id=&is_favorite=&user_id=&only_my=&limit=&offset=
+//GET api/v1/quotes?q=&topic_id=&is_favorite=&user_id=&only_my=&limit=&offset=
 export async function getQuotes(req: Request, res: Response) {
     try {
         const q = (req.query.q as string || '').trim();
@@ -86,7 +86,7 @@ export async function getQuotes(req: Request, res: Response) {
     }
 }
 
-// GET /quotes/:id
+// GET /api/v1/quotes/:id
 export async function getQuoteById(req: Request, res: Response) {
     try {
         const id = Number(req.params.id);
@@ -108,7 +108,7 @@ export async function getQuoteById(req: Request, res: Response) {
     }
 }
 
-// POST /quotes
+// POST /api/v1/quotes
 export const addQuote = async (req: AuthRequest, res: Response) => {
     try {
         const body = req.body;
@@ -130,7 +130,7 @@ export const addQuote = async (req: AuthRequest, res: Response) => {
     }
 };
 
-// PUT /quotes/:id
+// PUT /api/v1/quotes/:id
 export async function updateQuote(req: AuthRequest, res: Response) {
     try {
         const id = Number(req.params.id);
@@ -162,7 +162,7 @@ export async function updateQuote(req: AuthRequest, res: Response) {
     }
 }
 
-// DELETE /quotes/:id
+// DELETE /api/v1/quotes/:id
 export async function deleteQuote(req: AuthRequest, res: Response) {
     try {
         const id = Number(req.params.id);

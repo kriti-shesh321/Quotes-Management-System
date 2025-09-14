@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../types/types';
 import { pool } from '../utils/db';
 
-// GET /user
+// GET api/v1/user
 export const getCurrentUser = async (req: AuthRequest, res: Response) => {
     try {
         if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
