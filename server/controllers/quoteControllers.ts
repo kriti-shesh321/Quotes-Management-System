@@ -10,6 +10,7 @@ export async function getQuotes(req: Request, res: Response) {
         const topicId = req.query.topic_id ? Number(req.query.topic_id) : null;
         const userFilter = req.query.user_id ? Number(req.query.user_id) : null;
         const onlyMy = req.query.only_my === 'true';
+        const isFavoriteFilter = req.query.is_favorite === 'true';
         const limit = Math.min(100, Number(req.query.limit || 20));
         const offset = Number(req.query.offset || 0);
 
@@ -18,65 +19,72 @@ export async function getQuotes(req: Request, res: Response) {
         const isAdmin = isAuth && authReq.user!.role === 'admin';
         const meId = isAuth ? authReq.user!.id : null;
 
-        // Build WHERE clauses and params array progressively
+        if (isFavoriteFilter && !isAuth) {
+            return res.status(401).json({ message: 'Authentication required for favorites' });
+        }
+
         const where: string[] = [];
         const params: any[] = [];
 
-        // Search clause
         if (search) {
             params.push(search, search);
             where.push(`(q.text ILIKE $${params.length - 1} OR q.author ILIKE $${params.length})`);
         }
 
-        // Topic filter
         if (topicId !== null) {
             params.push(topicId);
             where.push(`q.topic_id = $${params.length}`);
         }
 
-        // User filter and visibility logic
-        if (!isAuth) {
-            // unauthenticated -> only public
-            where.push(`q.is_public = TRUE`);
-        } else if (isAdmin) {
-            // admin -> no visibility restriction
-            if (userFilter !== null) {
-                params.push(userFilter);
+        if (isFavoriteFilter) {
+            params.push(true);
+            where.push(`q.is_favorite = $${params.length}`);
+
+            if (isAdmin) {
+                if (userFilter !== null) {
+                    params.push(userFilter);
+                    where.push(`q.user_id = $${params.length}`);
+                }
+            } else {
+                params.push(meId);
                 where.push(`q.user_id = $${params.length}`);
             }
         } else {
-            // authenticated normal user
-            if (onlyMy) {
-                // only my quotes (public or private)
-                params.push(meId);
-                where.push(`q.user_id = $${params.length}`);
-            } else if (userFilter !== null) {
-                // viewing specific user's quotes: if it's me, allow my private; else only public
-                if (userFilter === meId) {
+            if (!isAuth) {
+                where.push(`q.is_public = TRUE`);
+            } else if (isAdmin) {
+                if (userFilter !== null) {
                     params.push(userFilter);
                     where.push(`q.user_id = $${params.length}`);
-                } else {
-                    params.push(userFilter);
-                    where.push(`q.user_id = $${params.length} AND q.is_public = TRUE`);
                 }
             } else {
-                // default: public OR my own
-                params.push(meId);
-                where.push(`(q.is_public = TRUE OR q.user_id = $${params.length})`);
+                if (onlyMy) {
+                    params.push(meId);
+                    where.push(`q.user_id = $${params.length}`);
+                } else if (userFilter !== null) {
+                    if (userFilter === meId) {
+                        params.push(userFilter);
+                        where.push(`q.user_id = $${params.length}`);
+                    } else {
+                        params.push(userFilter);
+                        where.push(`q.user_id = $${params.length} AND q.is_public = TRUE`);
+                    }
+                } else {
+                    params.push(meId);
+                    where.push(`(q.is_public = TRUE OR q.user_id = $${params.length})`);
+                }
             }
         }
 
-        // Compose final SQL
-        // Add username join and ordering/pagination
         params.push(limit, offset);
         const sql = `
-      SELECT q.*, u.username
-      FROM quotes q
-      LEFT JOIN users u ON q.user_id = u.id
-      ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
-      ORDER BY q.created_at DESC
-      LIMIT $${params.length - 1} OFFSET $${params.length}
-    `;
+            SELECT q.*, u.username
+            FROM quotes q
+            LEFT JOIN users u ON q.user_id = u.id
+            ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
+            ORDER BY q.created_at DESC
+            LIMIT $${params.length - 1} OFFSET $${params.length}
+        `;
 
         const { rows } = await pool.query(sql, params);
         return res.json(rows);
@@ -112,7 +120,7 @@ export async function getQuoteById(req: Request, res: Response) {
 export const addQuote = async (req: AuthRequest, res: Response) => {
     try {
         const body = req.body;
-        if (!body || !body.text) return res.status(400).json({ message: 'text required' });
+        if (!body || !body?.text) return res.status(400).json({ message: 'text required' });
 
         const userId = req.user?.id ?? null;
         const text = body.text.trim();
@@ -135,7 +143,7 @@ export async function updateQuote(req: AuthRequest, res: Response) {
     try {
         const id = Number(req.params.id);
         const body = req.body;
-        if (!body || !body.text) return res.status(400).json({ message: 'text required' });
+        if (!body) return res.status(400).json({ message: 'Body is required.' });
 
         // fetch the quote by id
         const { rows: qrows } = await pool.query('SELECT * FROM quotes WHERE id = $1', [id]);
@@ -144,7 +152,7 @@ export async function updateQuote(req: AuthRequest, res: Response) {
 
         const isOwner = req.user && quote.user_id === req.user.id;
         const isAdmin = req.user && req.user.role === 'admin';
-        console.log('User:', req.user);
+
         if (!isOwner && !isAdmin) return res.status(403).json({ message: 'Forbidden' });
 
         const newText = typeof body.text === 'string' ? body.text.trim() : quote.text;

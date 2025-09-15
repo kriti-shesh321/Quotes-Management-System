@@ -8,11 +8,19 @@ export const api = axios.create({
     headers: { 'Content-Type': 'application/json' },
 });
 
+const storedToken = localStorage.getItem('token');
+if (storedToken) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+}
+
 api.interceptors.request.use(
     config => {
         const token = localStorage.getItem('token');
-        if (token && config.headers) {
-            config.headers['Authorization'] = token;
+        if (token) {
+            if (!config.headers) config.headers = new axios.AxiosHeaders();
+            config.headers['Authorization'] = `Bearer ${token}`;
         }
         return config;
-    });
+    },
+    err => Promise.reject(err)
+);

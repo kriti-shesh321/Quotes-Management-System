@@ -5,7 +5,7 @@ import type { Quote } from '../../types/types';
 interface QuotesState { items: Quote[]; offset: number; finished: boolean; status: 'idle'|'loading'|'failed' }
 const initialState: QuotesState = { items: [], offset: 0, finished: false, status: 'idle' };
 
-export const fetchQuotes = createAsyncThunk('quotes/fetch', async (params:{ limit?:number, offset?:number, topic_id?:number, q?: string }) => {
+export const fetchQuotes = createAsyncThunk('quotes/fetch', async (params:{ limit?:number, offset?:number, topic_id?:number, q?: string, only_my?: boolean, is_favorite?: boolean }) => {
   const res = await api.get('/quotes', { params });
   return res.data as Quote[];
 });
