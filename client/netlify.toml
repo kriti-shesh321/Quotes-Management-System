@@ -1,11 +1,4 @@
-[build]
-  base = "client"
-  publish = "dist"
-  command = "tsc -b && vite build"
-
 [[redirects]]
-  from = "/api/*"
-  to = "http://54.79.12.50:8000/:splat"
-  status = 200
-  force = true
-  proxy = true
+from = "/*"
+to = "/index.html"
+status = 200
