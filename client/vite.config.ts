@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3000,
       proxy: {
-        '/': {
+        '/api': {
           target: env.VITE_BACKEND_URL || 'http://54.79.12.50:8000',
           changeOrigin: true,
         },
