@@ -7,6 +7,10 @@ A full-stack web application to manage quotes with user authentication, topics, 
 ## 🚀 Features
 - **User authentication** (register, login, logout)
 - **Roles**: `user` and `admin`
+- **Role-based access control (RBAC):**
+  - `user`: Can create, edit, delete, and favorite **their own quotes**.
+  - `admin`: Can edit and delete **any user’s quotes**.  
+    (Admin accounts must be seeded in the database manually - frontend signup is for users only.)
 - **Quotes management**:
   - Add, edit, delete quotes
   - Mark quotes as **public** or **private**
@@ -22,7 +26,7 @@ A full-stack web application to manage quotes with user authentication, topics, 
 **Frontend**  
 - React + Vite + TypeScript  
 - Redux Toolkit (state management)  
-- TailwindCSS v4  
+- TailwindCSS
 
 **Backend**  
 - Node.js + Express + TypeScript  
@@ -113,6 +117,7 @@ npm run build
 ## 🖥 Deployment Notes
 - **Backend** deployed on Railway
 - **Frontend** deployed on Netlify (proxy configured with `netlify.toml`).
+⚠️ Note: Admin accounts are created directly in the database. Frontend provides user flows only.
 
 ---
 
