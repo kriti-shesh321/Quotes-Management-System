@@ -1,4 +1,11 @@
+# netlify.toml
+[build]
+  publish = "client/dist"
+  command = "tsc -b && vite build"
+
 [[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+  from = "/api/*"
+  to = "http://54.79.12.50:8000/:splat"
+  status = 200
+  force = true
+  proxy = true
