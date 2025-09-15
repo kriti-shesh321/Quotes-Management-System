@@ -1,0 +1,607 @@
+{
+	"info": {
+		"_postman_id": "de0e3a4f-7d34-47f1-8032-08974d766490",
+		"name": "Qutoes App",
+		"description": "A simple quotes management app API collection.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17086606",
+		"_collection_link": "https://test44-4738.postman.co/workspace/1e424714-dd83-4b78-8fb9-926335bd3fbf/collection/17086606-de0e3a4f-7d34-47f1-8032-08974d766490?action=share&source=collection_link&creator=17086606"
+	},
+	"item": [
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"quotesAuthToken\", response.token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"rei@gmail.com\",\n    \"password\": \"123456789\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://quotes-management-system-production.up.railway.app/api/v1/auth/login",
+					"protocol": "https",
+					"host": [
+						"quotes-management-system-production",
+						"up",
+						"railway",
+						"app"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"Tim@gmail.com\",\n    \"username\": \"Tim Lin\",\n    \"password\": \"123456789\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get quotes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"rei@gmail.com\",\n    \"password\": \"123456789\"\n}"
+				},
+				"url": {
+					"raw": "https://quotes-management-system-production.up.railway.app/api/v1/quotes?limit=&offset=&topic_id=&",
+					"protocol": "https",
+					"host": [
+						"quotes-management-system-production",
+						"up",
+						"railway",
+						"app"
+					],
+					"path": [
+						"api",
+						"v1",
+						"quotes"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": ""
+						},
+						{
+							"key": "offset",
+							"value": ""
+						},
+						{
+							"key": "topic_id",
+							"value": ""
+						},
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add quote",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{quotesAuthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \n    \"topic_id\": \"3\",\n    \"text\": \"Turn around\",\n    \"author\": \"Mary\"\n}"
+				},
+				"url": {
+					"raw": "https://quotes-management-system-production.up.railway.app/api/v1/quotes",
+					"protocol": "https",
+					"host": [
+						"quotes-management-system-production",
+						"up",
+						"railway",
+						"app"
+					],
+					"path": [
+						"api",
+						"v1",
+						"quotes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit quote",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{quotesAuthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"The only way to do great work is to love what you do or just do what is necessary.\",\n    \"author\": \"Mary\"\n}"
+				},
+				"url": {
+					"raw": "https://quotes-management-system-production.up.railway.app/api/v1/quotes/6",
+					"protocol": "https",
+					"host": [
+						"quotes-management-system-production",
+						"up",
+						"railway",
+						"app"
+					],
+					"path": [
+						"api",
+						"v1",
+						"quotes",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete quote",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{quotesAuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://quotes-management-system-production.up.railway.app/api/v1/quotes/6",
+					"protocol": "https",
+					"host": [
+						"quotes-management-system-production",
+						"up",
+						"railway",
+						"app"
+					],
+					"path": [
+						"api",
+						"v1",
+						"quotes",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "topics",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{quotesAuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://quotes-management-system-production.up.railway.app/api/v1/topics",
+					"protocol": "https",
+					"host": [
+						"quotes-management-system-production",
+						"up",
+						"railway",
+						"app"
+					],
+					"path": [
+						"api",
+						"v1",
+						"topics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "quote by Id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{quotesAuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://quotes-management-system-production.up.railway.app/api/v1/quotes/4",
+					"protocol": "https",
+					"host": [
+						"quotes-management-system-production",
+						"up",
+						"railway",
+						"app"
+					],
+					"path": [
+						"api",
+						"v1",
+						"quotes",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"quotesAuthToken\", response.token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"rei@gmail.com\",\n    \"password\": \"123456789\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/auth/login",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"Timmy@gmail.com\",\n    \"username\": \"Timmy Lin\",\n    \"password\": \"123456789\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/auth/register",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add quote",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{quotesAuthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \n    \"topic_id\": \"3\",\n    \"text\": \"Turn around\",\n    \"author\": \"Mary\"\n}"
+				},
+				"url": {
+					"raw": "https://quotes-management-system-production.up.railway.app/api/v1/quotes",
+					"protocol": "https",
+					"host": [
+						"quotes-management-system-production",
+						"up",
+						"railway",
+						"app"
+					],
+					"path": [
+						"api",
+						"v1",
+						"quotes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get quotes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{quotesAuthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"rei@gmail.com\",\n    \"password\": \"123456789\"\n}"
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/quotes?limit=&offset=&topic_id=&",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"quotes"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": ""
+						},
+						{
+							"key": "offset",
+							"value": ""
+						},
+						{
+							"key": "topic_id",
+							"value": ""
+						},
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit quote",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{quotesAuthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"The only way to do great work is to love what you do or just do what is necessary.\",\n    \"author\": \"Mary\"\n}"
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/quotes/6",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"quotes",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete quote",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{quotesAuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/quotes/6",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"quotes",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "topics",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{quotesAuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/topics",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"topics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "quote by Id",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{quotesAuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/quotes/11",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"quotes",
+						"11"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": ""
+		}
+	]
+}
