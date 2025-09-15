@@ -117,7 +117,7 @@ npm run build
 ## 🖥 Deployment Notes
 - **Backend** deployed on Railway
 - **Frontend** deployed on Netlify (proxy configured with `netlify.toml`).
-⚠️ Note: Admin accounts are created directly in the database. Frontend provides user flows only.
+>⚠️ Note: Admin accounts are created directly in the database. Frontend provides user flows only.
 
 ---
 
