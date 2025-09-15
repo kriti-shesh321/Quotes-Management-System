@@ -1,6 +1,7 @@
 # netlify.toml
 [build]
-  publish = "client/dist"
+  base = "client"
+  publish = "dist"
   command = "tsc -b && vite build"
 
 [[redirects]]
